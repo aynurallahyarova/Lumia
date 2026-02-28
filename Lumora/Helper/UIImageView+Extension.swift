@@ -6,12 +6,12 @@
 //
 
 import UIKit
-import Kingfisher
+//import Kingfisher
 
 
-extension UIImageView {
-    func loadURL(data: String) {
-        let url = URL(string: <#T##String#>)
-        kf.setImage(with: url)
-    }
-}
+//extension UIImageView {
+//    func loadURL(data: String) {
+//        let url = URL(string: <#T##String#>)
+//        kf.setImage(with: url)
+//    }
+//}
