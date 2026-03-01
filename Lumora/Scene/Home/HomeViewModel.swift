@@ -17,7 +17,7 @@ final class HomeViewModel {
     private let manager = CoreManager()
     
     func fetchPhotos() {
-        manager.request(model: [Photo].self, endpoint: "photos", parameters: ["page": 1, "per_page": 20]) { data, errorMessage in
+        manager.request(model: [Photo].self, endpoint: "photos", parameters: ["page": 1, "per_page": 30]) { data, errorMessage in
             if let errorMessage {
                 self.error?(errorMessage)
             } else if let data {
@@ -25,6 +25,17 @@ final class HomeViewModel {
                 self.success?()
             }
         }
+    }
+    func searchPhotos(query: String) {
+        manager.request(model: SearchPhotoResponse.self, endpoint: "search/photos", parameters: ["query": query]) { data, errorMessage in
+            if let errorMessage {
+                self.error?(errorMessage)
+            } else if let data {
+                self.photos = data.results
+                self.success?()
+            }
+        }
+        
     }
 
 }
