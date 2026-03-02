@@ -87,7 +87,7 @@ extension HomeController: CollectionConfiguration {
         let ratio = photoHeight / photoWidth
         let imageHeight = width * ratio
         
-        let totalHeight = imageHeight + 30  
+        let totalHeight = imageHeight + 30
         
         return CGSize(width: width, height: totalHeight)
     }
