@@ -9,9 +9,16 @@ import UIKit
 
 class HomeController: BaseController {
     lazy var collection: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 16
-        layout.minimumInteritemSpacing = 8
+//        let layout = UICollectionViewFlowLayout()
+//        layout.minimumLineSpacing = 16
+//        layout.minimumInteritemSpacing = 8
+        
+        let layout = WaterfallLayout()
+        layout.delegate = self
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        layout.minimumLineSpacing = 8.0
+        layout.minimumInteritemSpacing = 8.0
+        layout.headerHeight = 50.0
         
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.delegate = self
@@ -73,24 +80,27 @@ extension HomeController: CollectionConfiguration {
         cell.configure(with: photo)
         return cell
     }
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let width = (collectionView.frame.width - 8) / 2
-        
-        let photo = viewModel.photos[indexPath.item]
-        
-        let photoWidth = CGFloat(photo.urls?.width ?? 300)
-        let photoHeight = CGFloat(photo.urls?.height ?? 300)
-        
-        let ratio = photoHeight / photoWidth
-        let imageHeight = width * ratio
-        
-        let totalHeight = imageHeight + 30
-        
-        return CGSize(width: width, height: totalHeight)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        <#code#>
     }
+//    func collectionView(_ collectionView: UICollectionView,
+//                        layout collectionViewLayout: UICollectionViewLayout,
+//                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        
+//        let width = (collectionView.frame.width - 8) / 2
+//        
+//        let photo = viewModel.photos[indexPath.item]
+//        
+//        let photoWidth = CGFloat(photo.urls?.width ?? 300)
+//        let photoHeight = CGFloat(photo.urls?.height ?? 300)
+//        
+//        let ratio = photoHeight / photoWidth
+//        let imageHeight = width * ratio
+//        
+//        let totalHeight = imageHeight + 30
+//        
+//        return CGSize(width: width, height: totalHeight)
+//    }
 }
 extension HomeController: UISearchBarDelegate {
     
@@ -101,3 +111,25 @@ extension HomeController: UISearchBarDelegate {
     }
 }
 
+extension HomeController: WaterfallLayoutDelegate {
+    func collectionView(_ collectionView: UICollectionView, layout: WaterfallLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = (collectionView.frame.width - 8) / 2
+        
+        let photo = viewModel.photos[indexPath.item]
+        
+        let photoWidth = CGFloat(photo.urls?.width ?? 300)
+        let photoHeight = CGFloat(photo.urls?.height ?? 300)
+        
+        let ratio = photoHeight / photoWidth
+        let imageHeight = width * ratio
+        
+        let totalHeight = imageHeight + 50
+        
+        return CGSize(width: width, height: indexPath.item % 2 == 0 ? totalHeight : imageHeight)
+    }
+
+    func collectionViewLayout(for section: Int) -> WaterfallLayout.Layout {
+//        .waterfall(column: 2, distributionMethod: .balanced)
+        .waterfall(column: 2, distributionMethod: .balanced)
+    }
+}

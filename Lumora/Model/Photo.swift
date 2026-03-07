@@ -7,7 +7,16 @@
 
 import Foundation
 
-struct Photo: Codable {
+struct Photo: Codable, TopImageBottomLabelProtocol {
+    var titleText: String {
+        user?.name ?? ""
+    }
+    
+    var imageName: String {
+        urls?.small ?? ""
+    }
+    
+    
     let id: String?
     let description: String?
     let altDescription: String?
