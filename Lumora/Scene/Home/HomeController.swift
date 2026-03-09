@@ -31,6 +31,7 @@ class HomeController: BaseController {
     
     private let viewModel = HomeViewModel()
     private let searchBar = UISearchBar()
+    var coordinator: AppCoordinator?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,7 +82,8 @@ extension HomeController: CollectionConfiguration {
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        <#code#>
+        let photo = viewModel.photos[indexPath.row]
+        coordinator?.openPhotoDetail(photo: photo)
     }
 //    func collectionView(_ collectionView: UICollectionView,
 //                        layout collectionViewLayout: UICollectionViewLayout,

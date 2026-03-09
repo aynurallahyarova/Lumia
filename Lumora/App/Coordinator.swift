@@ -21,9 +21,14 @@ class AppCoordinator: Coordinator {
     }
     
     func start() {
-        let viewModel = TopicsViewModel()
-        let controller = TopicsController()
+        let controller = HomeController()
+        controller.coordinator = self
         navigationController.pushViewController(controller, animated: false)
+    }
+    func openPhotoDetail(photo: Photo) {
+        let controller = PhotoDetailController()
+        controller.viewModel = PhotoDetailViewModel(photo: photo)
+        navigationController.pushViewController(controller, animated: true)
     }
     
     
