@@ -13,6 +13,8 @@ class TopicsCell: UICollectionViewCell {
     
     let titleLabel = UILabel()
     let descriptionLabel = UILabel()
+    let coverImage = UIImageView()
+    let overlayView = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,35 +29,55 @@ class TopicsCell: UICollectionViewCell {
         
         backgroundColor = .systemGray6
         layer.cornerRadius = 12
+        layer.cornerRadius = 20
+        clipsToBounds = true
         
         titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
+        titleLabel.textColor = .white
         
-        descriptionLabel.font = .systemFont(ofSize: 14)
+        descriptionLabel.font = .systemFont(ofSize: 12)
         descriptionLabel.numberOfLines = 0
+        descriptionLabel.textColor = .white
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        coverImage.translatesAutoresizingMaskIntoConstraints = false
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
         
-        addSubview(titleLabel)
-        addSubview(descriptionLabel)
+        coverImage.contentMode = .scaleAspectFill
+        coverImage.clipsToBounds = true
+        
+        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.35)
+        
+        contentView.addSubview(coverImage)
+        contentView.addSubview(overlayView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(descriptionLabel)
         
         NSLayoutConstraint.activate([
             
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 12),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            coverImage.topAnchor.constraint(equalTo: contentView.topAnchor),
+            coverImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            coverImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            coverImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-            descriptionLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12)
+            overlayView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            overlayView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            overlayView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            overlayView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -4),
+            
+            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
         ])
-        
-    }
-    func configure(data: Topic) {
-        titleLabel.text = data.title
-        
     }
     
+    func configure(data: Topic) {
+        titleLabel.text = data.title
+        descriptionLabel.text = data.description
+        coverImage.loadURL(data: data.coverPhoto?.urls?.small ?? "")
+    }
 }

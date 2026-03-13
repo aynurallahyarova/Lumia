@@ -45,4 +45,3 @@ struct PhotoUser: Codable {
     let name: String?
     let username: String?
 }
-
