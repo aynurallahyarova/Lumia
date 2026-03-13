@@ -11,6 +11,7 @@ import Alamofire
 enum EncodingType {
     case url, json
 }
+
 class CoreHelper {
     static let shared = CoreHelper()
     
@@ -20,8 +21,10 @@ class CoreHelper {
     let headers: HTTPHeaders = [
          "Authorization": "Client-ID IKyaJzigmsdTC6hOe5xOETUQn1iXt8sOCujGt_fkb14"
      ]
+    
+    private init() {}
+    
     func configureURL(endpoint: String) -> String {
         baseURL + endpoint
-        
     }
 }

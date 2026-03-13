@@ -9,10 +9,7 @@ import UIKit
 
 class PhotoDetailController: BaseController {
     
-    var photo: Photo?
-    var viewModel: PhotoDetailViewModel?
-    
-    private let imageView: UIImageView = {
+    private lazy var imageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
@@ -29,7 +26,7 @@ class PhotoDetailController: BaseController {
         return l
     }()
 
-    private let button: UIButton = {
+    private lazy var button: UIButton = {
         let b = UIButton()
         b.setTitle("Download", for: .normal)
         b.setTitleColor(.white, for: .normal)
@@ -38,13 +35,26 @@ class PhotoDetailController: BaseController {
         b.translatesAutoresizingMaskIntoConstraints = false
         return b
     }()
-
+    
+    var viewModel: PhotoDetailViewModel
+    
+    init(viewModel: PhotoDetailViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @MainActor required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
     }
     override func configureUI() {
         view.backgroundColor = .white
+        userLabel.text = viewModel.userName
+        imageView.loadURL(data: viewModel.imageURL)
     }
     override func configureConstraints() {
         view.addSubview(userLabel)
@@ -66,12 +76,4 @@ class PhotoDetailController: BaseController {
             button.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
-    override func configureViewModel() {
-        userLabel.text = viewModel?.userName
-        if let url = viewModel?.imageURL {
-            imageView.loadURL(data: url)
-        }
-    }
-    
-
 }

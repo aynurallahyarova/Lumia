@@ -9,11 +9,12 @@ import UIKit
 
 protocol Coordinator {
     var navigationController: UINavigationController { get set }
-    func start()
+    func openPhotoDetail(photo: Photo)
     
 }
 
 class AppCoordinator: Coordinator {
+  
     var navigationController: UINavigationController
     
     init(navigationController: UINavigationController) {
@@ -22,12 +23,11 @@ class AppCoordinator: Coordinator {
     
     func start() {
         let controller = HomeController()
-        controller.coordinator = self
-        navigationController.pushViewController(controller, animated: false)
+        navigationController.show(controller, sender: nil)
     }
+    
     func openPhotoDetail(photo: Photo) {
-        let controller = PhotoDetailController()
-        controller.viewModel = PhotoDetailViewModel(photo: photo)
+        let controller = PhotoDetailController(viewModel: .init(photo: photo))
         navigationController.pushViewController(controller, animated: true)
     }
     
