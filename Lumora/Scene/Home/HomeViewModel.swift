@@ -10,15 +10,30 @@ import UIKit
 final class HomeViewModel {
     
     var photos: [Photo] = []
+    private var currentPage = 1
     var success: (() -> Void)?
     var error: ((String) -> Void)?
 
-    
     private let useCase: HomeUseCase
     
+    init(useCase: HomeUseCase) {
+        self.useCase = useCase
+    }
     
     func fetchPhotos() {
-        manager.request(model: [Photo].self, endpoint: PhotoEndpoint.photos.rawValue, parameters: ["page": 1, "per_page": 30]) { data, errorMessage in
+        useCase.fetchPhotos(page: currentPage, perPage: 30) { data, errorMessage in
+            if let errorMessage {
+                self.error?(errorMessage)
+            } else if let data {
+                self.photos.append(contentsOf: data)
+                self.currentPage += 1
+                self.success?()
+            }
+        }
+    }
+    
+    func searchPhotos(query: String) {
+        useCase.searchPhotos(query: query) { data, errorMessage in
             if let errorMessage {
                 self.error?(errorMessage)
             } else if let data {
@@ -27,16 +42,4 @@ final class HomeViewModel {
             }
         }
     }
-    func searchPhotos(query: String) {
-        manager.request(model: SearchPhotoResponse.self, endpoint: PhotoEndpoint.searchPhotos.rawValue, parameters: ["query": query]) { data, errorMessage in
-            if let errorMessage {
-                self.error?(errorMessage)
-            } else if let data {
-                self.photos = data.results
-                self.success?()
-            }
-        }
-        
-    }
-
 }

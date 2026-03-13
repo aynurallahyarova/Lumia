@@ -29,7 +29,9 @@ class HomeController: BaseController {
         return collection
     }()
     
-    private let viewModel = HomeViewModel()
+    private lazy var homeManager = HomeManager()
+    private lazy var viewModel = HomeViewModel(useCase: homeManager)
+    
     private let searchBar = UISearchBar()
     var coordinator: AppCoordinator?
 
@@ -109,6 +111,8 @@ extension HomeController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text, !text.isEmpty else { return }
+        viewModel.photos.removeAll()
+        collection.reloadData()
         viewModel.searchPhotos(query: text)
         searchBar.resignFirstResponder()
     }
