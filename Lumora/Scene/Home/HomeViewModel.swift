@@ -14,10 +14,11 @@ final class HomeViewModel {
     var error: ((String) -> Void)?
 
     
-    private let manager = CoreManager()
+    private let useCase: HomeUseCase
+    
     
     func fetchPhotos() {
-        manager.request(model: [Photo].self, endpoint: "photos", parameters: ["page": 1, "per_page": 30]) { data, errorMessage in
+        manager.request(model: [Photo].self, endpoint: PhotoEndpoint.photos.rawValue, parameters: ["page": 1, "per_page": 30]) { data, errorMessage in
             if let errorMessage {
                 self.error?(errorMessage)
             } else if let data {
@@ -27,7 +28,7 @@ final class HomeViewModel {
         }
     }
     func searchPhotos(query: String) {
-        manager.request(model: SearchPhotoResponse.self, endpoint: "search/photos", parameters: ["query": query]) { data, errorMessage in
+        manager.request(model: SearchPhotoResponse.self, endpoint: PhotoEndpoint.searchPhotos.rawValue, parameters: ["query": query]) { data, errorMessage in
             if let errorMessage {
                 self.error?(errorMessage)
             } else if let data {

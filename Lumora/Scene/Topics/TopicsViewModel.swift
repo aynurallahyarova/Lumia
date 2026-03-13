@@ -16,7 +16,7 @@ final class TopicsViewModel {
     private let manager = CoreManager()
     
     func getTopics() {
-        manager.request(model: [Topic].self, endpoint: "topics") { data, errorMessage in
+        manager.request(model: [Topic].self, endpoint: TopicsEndpoint.topics.rawValue) { data, errorMessage in
             if let data {
                 self.topics = data
                 self.success?()
