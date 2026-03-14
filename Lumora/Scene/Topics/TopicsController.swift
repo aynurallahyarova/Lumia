@@ -24,9 +24,7 @@ class TopicsController: BaseController {
         cv.delegate = self
         
         cv.backgroundColor = .white
-        
         return cv
-        
     }()
 
     override func viewDidLoad() {
