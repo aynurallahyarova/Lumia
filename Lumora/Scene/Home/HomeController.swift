@@ -15,10 +15,10 @@ class HomeController: BaseController {
         
         let layout = WaterfallLayout()
         layout.delegate = self
-        layout.sectionInset = UIEdgeInsets(top: 4, left: 16, bottom: 16, right: 16)
+        layout.sectionInset = UIEdgeInsets(top: 8, left: 16, bottom: 16, right: 16)
         layout.minimumLineSpacing = 8.0
         layout.minimumInteritemSpacing = 8.0
-//        layout.headerHeight = 50.0
+        layout.headerHeight = 8.0
         
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.delegate = self
@@ -84,7 +84,7 @@ extension HomeController: CollectionConfiguration {
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let photo = viewModel.photos[indexPath.row]
+        let photo = viewModel.photos[indexPath.item]
         print("debug")
         coordinator?.openPhotoDetail(photo: photo)
     }

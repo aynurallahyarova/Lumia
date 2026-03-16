@@ -51,6 +51,7 @@ class AppCoordinator: Coordinator {
         tabBar.viewControllers = [homeNav, topicsNav, usersNav, favoriteNav, profileNav]
 
         navigationController.setViewControllers([tabBar], animated: false)
+        navigationController.isNavigationBarHidden = true
         
     }
     
