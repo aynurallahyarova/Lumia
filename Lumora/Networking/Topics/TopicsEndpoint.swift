@@ -9,4 +9,5 @@ import Foundation
 
 enum TopicsEndpoint: String {
     case topics = "topics"
+    
 }
