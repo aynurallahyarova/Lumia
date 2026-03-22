@@ -8,7 +8,7 @@
 import UIKit
 
 class HomeController: BaseController {
-    lazy var collection: UICollectionView = {
+    private lazy var collection: UICollectionView = {
 //        let layout = UICollectionViewFlowLayout()
 //        layout.minimumLineSpacing = 16
 //        layout.minimumInteritemSpacing = 8
