@@ -9,7 +9,7 @@ import UIKit
 
 class TopicsController: BaseController {
     let viewModel = TopicsViewModel()
-    
+    var coordinator: AppCoordinator?
     lazy var collectionView: UICollectionView = {
         
         let layout = UICollectionViewFlowLayout()
@@ -71,5 +71,9 @@ extension TopicsController: UICollectionViewDataSource, UICollectionViewDelegate
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         CGSize(width: view.frame.width - 32, height: 120)
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let topic = viewModel.topics[indexPath.item]
+        coordinator?.openTopicPhotos(topic: topic)
     }
 }

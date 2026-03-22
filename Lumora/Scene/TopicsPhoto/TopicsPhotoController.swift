@@ -26,6 +26,7 @@ class TopicsPhotoController: BaseController {
     }()
     
     private let topic: Topic
+    var coordinator: AppCoordinator?
     private lazy var viewModel = TopicsPhotoViewModel(useCase: TopicsPhotoManager())
     
     init(topic: Topic) {
@@ -42,6 +43,9 @@ class TopicsPhotoController: BaseController {
 
     }
     override func configureUI() {
+        navigationItem.title = topic.title ?? "Topic"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
         view.backgroundColor = .white
     }
     override func configureViewModel() {
@@ -70,7 +74,35 @@ extension TopicsPhotoController: CollectionConfiguration {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCell.identifier, for: indexPath) as! HomeCell
+        cell.configure(with: viewModel.photos[indexPath.item])
+        return cell
+    }
+
+}
+extension TopicsPhotoController: WaterfallLayoutDelegate {
+    func collectionView(_ collectionView: UICollectionView, layout: WaterfallLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = (collectionView.frame.width - 8) / 2
+        
+        let photo = viewModel.photos[indexPath.item]
+        
+        let photoWidth = CGFloat(photo.urls?.width ?? 300)
+        let photoHeight = CGFloat(photo.urls?.height ?? 300)
+        
+        let ratio = photoHeight / photoWidth
+        let imageHeight = width * ratio
+        
+        let totalHeight = imageHeight + 50
+        
+        return CGSize(width: width, height: indexPath.item % 2 == 0 ? totalHeight : imageHeight)
     }
     
-    
+    func collectionViewLayout(for section: Int) -> WaterfallLayout.Layout {
+        //        .waterfall(column: 2, distributionMethod: .balanced)
+        .waterfall(column: 2, distributionMethod: .balanced)
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let photo = viewModel.photos[indexPath.item]
+        coordinator?.openPhotoDetail(photo: photo)
+    }
 }
