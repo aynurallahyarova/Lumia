@@ -42,7 +42,9 @@ class TopicsController: BaseController {
     }
     
     override func configureUI() {
-        title = "Topics"
+        navigationItem.title = "Topics"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
         
         view.addSubview(collectionView)
         collectionView.frame = view.bounds
