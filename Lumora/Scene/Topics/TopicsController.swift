@@ -33,12 +33,12 @@ class TopicsController: BaseController {
     
     override func configureViewModel() {
         viewModel.getTopics()
-        viewModel.success = {
-            self.collectionView.reloadData()
+        viewModel.success = { [weak self] in
+            self?.collectionView.reloadData()
         }
         viewModel.error = { error in
             print(error)
-          }
+        }
     }
     
     override func configureUI() {

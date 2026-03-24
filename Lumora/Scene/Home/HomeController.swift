@@ -9,9 +9,7 @@ import UIKit
 
 class HomeController: BaseController {
     private lazy var collection: UICollectionView = {
-//        let layout = UICollectionViewFlowLayout()
-//        layout.minimumLineSpacing = 16
-//        layout.minimumInteritemSpacing = 8
+
         
         let layout = WaterfallLayout()
         layout.delegate = self
@@ -34,6 +32,11 @@ class HomeController: BaseController {
     
     private let searchBar = UISearchBar()
     var coordinator: AppCoordinator?
+    //  history göstərmək üçün
+    private var isShowingHistory = false
+    
+    //  history üçün ayrıca table
+    private let historyTable = UITableView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,12 +53,12 @@ class HomeController: BaseController {
     
     override func configureViewModel() {
         viewModel.fetchPhotos()
-        viewModel.success = {
-            self.collection.reloadData()
+        viewModel.success = { [weak self] in
+            self?.collection.reloadData()
         }
         viewModel.error = { error in
             print(error)
-          }
+        }
     }
     override func configureConstraints() {
         view.addSubview(collection)
@@ -74,46 +77,103 @@ class HomeController: BaseController {
 }
 extension HomeController: CollectionConfiguration {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.photos.count
+        isShowingHistory ? viewModel.searchHistory.count : viewModel.photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeCell", for: indexPath) as! HomeCell
-        let photo = viewModel.photos[indexPath.item]
-        cell.configure(with: photo)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCell.identifier, for: indexPath) as! HomeCell
+        
+        if isShowingHistory {
+            let text = viewModel.searchHistory[indexPath.item]
+            cell.configureHistory(text: text) //  əlavə et
+        } else {
+            let photo = viewModel.photos[indexPath.item]
+            cell.configure(with: photo)
+        }
+        
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let photo = viewModel.photos[indexPath.item]
-        print("debug")
-        coordinator?.openPhotoDetail(photo: photo)
+        if isShowingHistory {
+            
+            let query = viewModel.searchHistory[indexPath.item]
+            
+            searchBar.text = query
+            isShowingHistory = false
+            
+            viewModel.photos.removeAll()
+            collection.reloadData()
+            
+            viewModel.searchPhotos(query: query)
+            
+        } else {
+            
+            let photo = viewModel.photos[indexPath.item]
+            coordinator?.openPhotoDetail(photo: photo)
+        }
     }
-//    func collectionView(_ collectionView: UICollectionView,
-//                        layout collectionViewLayout: UICollectionViewLayout,
-//                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        
-//        let width = (collectionView.frame.width - 8) / 2
-//        
-//        let photo = viewModel.photos[indexPath.item]
-//        
-//        let photoWidth = CGFloat(photo.urls?.width ?? 300)
-//        let photoHeight = CGFloat(photo.urls?.height ?? 300)
-//        
-//        let ratio = photoHeight / photoWidth
-//        let imageHeight = width * ratio
-//        
-//        let totalHeight = imageHeight + 30
-//        
-//        return CGSize(width: width, height: totalHeight)
-//    }
+}
+extension HomeController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel.searchHistory.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "history")
+        cell.textLabel?.text = viewModel.searchHistory[indexPath.row]
+        return cell
+    }
+    
+    // swipe ilə silmək
+    func tableView(_ tableView: UITableView,
+                   commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            viewModel.deleteHistoryItem(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
+    
+    // history seçəndə
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let query = viewModel.searchHistory[indexPath.row]
+        
+        searchBar.text = query
+        
+        isShowingHistory = false
+        historyTable.isHidden = true
+        collection.isHidden = false
+        
+        viewModel.searchPhotos(query: query)
+    }
 }
 extension HomeController: UISearchBarDelegate {
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        isShowingHistory = true
+        collection.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        isShowingHistory = false
+        collection.reloadData()
+    }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
         guard let text = searchBar.text, !text.isEmpty else { return }
+        
+        isShowingHistory = false
+        
         viewModel.photos.removeAll()
         collection.reloadData()
+        
         viewModel.searchPhotos(query: text)
+        
         searchBar.resignFirstResponder()
     }
 }

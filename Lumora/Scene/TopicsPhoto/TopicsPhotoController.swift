@@ -50,12 +50,12 @@ class TopicsPhotoController: BaseController {
     }
     override func configureViewModel() {
         viewModel.fetchPhotos(topicId: topic.slug ?? "")
-        viewModel.success = {
-            self.collection.reloadData()
+        viewModel.success = { [weak self] in
+            self?.collection.reloadData()
         }
         viewModel.error = { error in
             print(error)
-          }
+        }
     }
     override func configureConstraints() {
         view.addSubview(collection)

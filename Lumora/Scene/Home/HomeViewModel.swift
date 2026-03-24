@@ -16,6 +16,14 @@ final class HomeViewModel {
 
     private let useCase: HomeUseCase
     
+    // MARK: - History
+    private let historyKey = "homeSearchHistory"
+    
+    // UserDefaults-dan oxuyuruq
+    var searchHistory: [String] {
+        return UserDefaults.standard.stringArray(forKey: historyKey) ?? []
+    }
+    
     init(useCase: HomeUseCase) {
         self.useCase = useCase
     }
@@ -33,6 +41,8 @@ final class HomeViewModel {
     }
     
     func searchPhotos(query: String) {
+        addToHistory(query)
+        
         useCase.searchPhotos(query: query) { data, errorMessage in
             if let errorMessage {
                 self.error?(errorMessage)
@@ -41,5 +51,32 @@ final class HomeViewModel {
                 self.success?()
             }
         }
+    }
+    // MARK: - History əlavə
+    private func addToHistory(_ query: String) {
+        var history = searchHistory
+        
+        // duplicate varsa sil
+        if let index = history.firstIndex(of: query) {
+            history.remove(at: index)
+        }
+        
+        // yeni query başa əlavə olunur
+        history.insert(query, at: 0)
+        
+        // max 10
+        if history.count > 10 {
+            history = Array(history.prefix(10))
+        }
+        
+        // yadda saxla
+        UserDefaults.standard.set(history, forKey: historyKey)
+    }
+    
+    // MARK: - Silmək (swipe)
+    func deleteHistoryItem(at index: Int) {
+        var history = searchHistory
+        history.remove(at: index)
+        UserDefaults.standard.set(history, forKey: historyKey)
     }
 }
