@@ -9,8 +9,23 @@ import UIKit
 
 class UsersController: BaseController {
     
-    private let tableView = UITableView()
-    private let searchController = UISearchController()
+    private lazy var tableView: UITableView = {
+        let tv = UITableView()
+        tv.register(UsersCell.self, forCellReuseIdentifier: UsersCell.identifier)
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
+    
+    private lazy var searchController: UISearchController = {
+        let sc = UISearchController()
+        sc.searchBar.placeholder = "Search members"
+        sc.obscuresBackgroundDuringPresentation = false
+        sc.searchBar.delegate = self
+
+        return sc
+    }()
+    
+    private lazy var searchBar: UISearchBar = searchController.searchBar
     
     private var currentQuery = "Aynur"
     
@@ -18,33 +33,30 @@ class UsersController: BaseController {
     
     private let viewModel = UsersViewModel(useCase: UsersManager())
     
-    private let searchBar = UISearchBar()
     var coordinator: AppCoordinator?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.searhUsers(query: currentQuery)
-
     }
     override func configureUI() {
         view.backgroundColor = .white
         title = "Users"
-        
         setupNavigationItems()
         
         navigationItem.searchController = searchController
-        searchController.searchBar.placeholder = "Search members"
-        searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.hidesSearchBarWhenScrolling = false
-        
-        searchController.searchBar.delegate = self
-        
         view.addSubview(tableView)
-        tableView.frame = view.bounds
-        
-        tableView.register(UsersCell.self, forCellReuseIdentifier: UsersCell.identifier)
         tableView.dataSource = self
         tableView.delegate = self
+    }
+    override func configureConstraints() {
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
     
     override func configureViewModel() {
@@ -170,8 +182,8 @@ extension UsersController: UITableViewDelegate {
             viewModel.searhUsers(query: query)
             
         } else {
-            let user = viewModel.users[indexPath.row]
-            // coordinator?.openUserDetail(user: user)
+            let selectedUser = viewModel.users[indexPath.row]
+            coordinator?.openUserDetail(user: selectedUser)
         }
     }
     

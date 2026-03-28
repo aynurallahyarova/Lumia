@@ -11,10 +11,37 @@ class TopicsCell: UICollectionViewCell {
     
     static let identifier = "TopicsCell"
     
-    let titleLabel = UILabel()
-    let descriptionLabel = UILabel()
-    let coverImage = UIImageView()
-    let overlayView = UIView()
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 18, weight: .bold)
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 12)
+        label.numberOfLines = 0
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var coverImage: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        return iv
+    }()
+    
+    private lazy var overlayView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.35)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,29 +53,11 @@ class TopicsCell: UICollectionViewCell {
     }
     
     func setupUI() {
-        
         backgroundColor = .systemGray6
         layer.cornerRadius = 12
         layer.cornerRadius = 20
         clipsToBounds = true
-        
-        titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
-        titleLabel.textColor = .white
-        
-        descriptionLabel.font = .systemFont(ofSize: 12)
-        descriptionLabel.numberOfLines = 0
-        descriptionLabel.textColor = .white
-        
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        coverImage.translatesAutoresizingMaskIntoConstraints = false
-        overlayView.translatesAutoresizingMaskIntoConstraints = false
-        
-        coverImage.contentMode = .scaleAspectFill
-        coverImage.clipsToBounds = true
-        
-        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.35)
-        
+
         contentView.addSubview(coverImage)
         contentView.addSubview(overlayView)
         contentView.addSubview(titleLabel)

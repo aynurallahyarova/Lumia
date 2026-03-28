@@ -9,8 +9,6 @@ import UIKit
 
 class HomeController: BaseController {
     private lazy var collection: UICollectionView = {
-
-        
         let layout = WaterfallLayout()
         layout.delegate = self
         layout.sectionInset = UIEdgeInsets(top: 8, left: 16, bottom: 16, right: 16)
@@ -27,16 +25,30 @@ class HomeController: BaseController {
         return collection
     }()
     
+    private lazy var historyTable: UITableView = {
+        let table = UITableView()
+        table.delegate = self
+        table.dataSource = self
+        table.register(UITableViewCell.self, forCellReuseIdentifier: "history")
+        table.isHidden = true
+        table.translatesAutoresizingMaskIntoConstraints = false
+        return table
+    }()
+    
+    private lazy var searchController: UISearchController = {
+        let sc = UISearchController(searchResultsController: nil)
+        sc.searchBar.placeholder = "Search photos"
+        sc.obscuresBackgroundDuringPresentation = false
+        sc.searchBar.delegate = self
+        return sc
+    }()
+    
     private lazy var homeManager = HomeManager()
     private lazy var viewModel = HomeViewModel(useCase: homeManager)
-    
-    private let searchController = UISearchController(searchResultsController: nil)
+
     var coordinator: AppCoordinator?
     //  history göstərmək üçün
     private var isShowingHistory = false
-    
-    //  history üçün ayrıca table
-    private let historyTable = UITableView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,15 +60,6 @@ class HomeController: BaseController {
         navigationItem.title = "Lumora"
         view.backgroundColor = .white
         navigationItem.searchController = searchController
-        searchController.searchBar.placeholder = "Search photos"
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.delegate = self
-        
-        historyTable.delegate = self
-        historyTable.dataSource = self
-        historyTable.register(UITableViewCell.self, forCellReuseIdentifier: "history")
-        historyTable.isHidden = true
-        
     }
     
     override func configureViewModel() {

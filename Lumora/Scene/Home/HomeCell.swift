@@ -10,9 +10,32 @@ import UIKit
 class HomeCell: UICollectionViewCell {
     static let identifier = "HomeCell"
     
-    private let imageView = UIImageView()
-    private let nameLabel = UILabel()
-    private let favoriteButton = UIButton()
+    private lazy var imageView: UIImageView = {
+        let view = UIImageView()
+        view.contentMode = .scaleAspectFill
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 12
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 12)
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private lazy var favoriteButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "heart"), for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        button.layer.cornerRadius = 14
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,24 +48,8 @@ class HomeCell: UICollectionViewCell {
     }
     private func configureUI() {
         contentView.clipsToBounds = true
-        
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 12
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        nameLabel.font = .systemFont(ofSize: 12)
-        nameLabel.numberOfLines = 1
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        favoriteButton.setImage(UIImage(systemName: "heart"), for: .normal)
-        favoriteButton.tintColor = .white
-        favoriteButton.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        favoriteButton.layer.cornerRadius = 14
-        favoriteButton.translatesAutoresizingMaskIntoConstraints = false
-    
-        
     }
+    
     func configureConstraints() {
         contentView.addSubview(imageView)
         contentView.addSubview(nameLabel)
@@ -65,12 +72,9 @@ class HomeCell: UICollectionViewCell {
             favoriteButton.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -8)
         ])
     }
-    
-    
+
     func configure(with photo: Photo) {
         imageView.loadURL(data: photo.urls?.small ?? "")
         nameLabel.text = photo.user?.name
-        
     }
-
 }

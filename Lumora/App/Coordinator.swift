@@ -12,10 +12,10 @@ protocol Coordinator {
     func start()
     func openPhotoDetail(photo: Photo)
     func openTopicPhotos(topic: Topic)
+    func openUserDetail(user: User)
 }
 
 class AppCoordinator: Coordinator {
-  
     private let tabBarController: UITabBarController
     
 
@@ -61,6 +61,13 @@ class AppCoordinator: Coordinator {
     func openTopicPhotos(topic: Topic) {
         let controller = TopicsPhotoController(topic: topic)
         controller.coordinator = self
+        if let nav = tabBarController.selectedViewController as? UINavigationController {
+            nav.pushViewController(controller, animated: true)
+        }
+    }
+    
+    func openUserDetail(user: User) {
+        let controller = UserDetailController() // bura user = user yazilacaq
         if let nav = tabBarController.selectedViewController as? UINavigationController {
             nav.pushViewController(controller, animated: true)
         }
