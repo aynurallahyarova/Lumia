@@ -72,7 +72,7 @@ extension TopicsController: UICollectionViewDataSource, UICollectionViewDelegate
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        CGSize(width: view.frame.width - 32, height: 120)
+        .init(width: view.frame.width - 32, height: 120)
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let topic = viewModel.topics[indexPath.item]

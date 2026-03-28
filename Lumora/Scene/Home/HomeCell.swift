@@ -72,9 +72,5 @@ class HomeCell: UICollectionViewCell {
         nameLabel.text = photo.user?.name
         
     }
-    func configureHistory(text: String) {
-        imageView.isHidden = true
-        nameLabel.isHidden = false
-        nameLabel.text = text
-    }
+
 }

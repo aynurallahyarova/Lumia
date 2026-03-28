@@ -61,6 +61,8 @@ class HomeController: BaseController {
         }
     }
     override func configureConstraints() {
+        view.addSubview(historyTable)
+        historyTable.frame = view.bounds
         view.addSubview(collection)
         view.addSubview(searchBar)
         NSLayoutConstraint.activate([
@@ -77,19 +79,13 @@ class HomeController: BaseController {
 }
 extension HomeController: CollectionConfiguration {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        isShowingHistory ? viewModel.searchHistory.count : viewModel.photos.count
+        viewModel.photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCell.identifier, for: indexPath) as! HomeCell
-        
-        if isShowingHistory {
-            let text = viewModel.searchHistory[indexPath.item]
-            cell.configureHistory(text: text) //  əlavə et
-        } else {
-            let photo = viewModel.photos[indexPath.item]
-            cell.configure(with: photo)
-        }
+        let photo = viewModel.photos[indexPath.item]
+        cell.configure(with: photo)
         
         return cell
     }
@@ -100,6 +96,7 @@ extension HomeController: CollectionConfiguration {
             
             searchBar.text = query
             isShowingHistory = false
+
             
             viewModel.photos.removeAll()
             collection.reloadData()
@@ -107,13 +104,23 @@ extension HomeController: CollectionConfiguration {
             viewModel.searchPhotos(query: query)
             
         } else {
-            
-            let photo = viewModel.photos[indexPath.item]
-            coordinator?.openPhotoDetail(photo: photo)
+
         }
+        
+        let photo = viewModel.photos[indexPath.item]
+        coordinator?.openPhotoDetail(photo: photo)
     }
 }
 extension HomeController: UITableViewDataSource, UITableViewDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        if searchText.isEmpty {
+//            historyTable.isHidden = true
+//            collection.isHidden = false
+//        }
+        historyTable.isHidden = searchText.isEmpty
+        collection.isHidden = !searchText.isEmpty
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.searchHistory.count
