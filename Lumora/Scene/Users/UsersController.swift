@@ -35,6 +35,7 @@ class UsersController: BaseController {
         navigationItem.searchController = searchController
         searchController.searchBar.placeholder = "Search members"
         searchController.obscuresBackgroundDuringPresentation = false
+        navigationItem.hidesSearchBarWhenScrolling = false
         
         searchController.searchBar.delegate = self
         

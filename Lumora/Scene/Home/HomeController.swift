@@ -30,7 +30,7 @@ class HomeController: BaseController {
     private lazy var homeManager = HomeManager()
     private lazy var viewModel = HomeViewModel(useCase: homeManager)
     
-    private let searchBar = UISearchBar()
+    private let searchController = UISearchController(searchResultsController: nil)
     var coordinator: AppCoordinator?
     //  history göstərmək üçün
     private var isShowingHistory = false
@@ -44,11 +44,19 @@ class HomeController: BaseController {
     }
     
     override func configureUI() {
+        navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.title = "Lumora"
         view.backgroundColor = .white
-        searchBar.placeholder = "Search photos"
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.delegate = self
+        navigationItem.searchController = searchController
+        searchController.searchBar.placeholder = "Search photos"
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+        
+        historyTable.delegate = self
+        historyTable.dataSource = self
+        historyTable.register(UITableViewCell.self, forCellReuseIdentifier: "history")
+        historyTable.isHidden = true
+        
     }
     
     override func configureViewModel() {
@@ -61,16 +69,11 @@ class HomeController: BaseController {
         }
     }
     override func configureConstraints() {
-        view.addSubview(historyTable)
         historyTable.frame = view.bounds
         view.addSubview(collection)
-        view.addSubview(searchBar)
+        view.addSubview(historyTable)
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            collection.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            collection.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
             collection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
             collection.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -90,22 +93,7 @@ extension HomeController: CollectionConfiguration {
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if isShowingHistory {
-            
-            let query = viewModel.searchHistory[indexPath.item]
-            
-            searchBar.text = query
-            isShowingHistory = false
 
-            
-            viewModel.photos.removeAll()
-            collection.reloadData()
-            
-            viewModel.searchPhotos(query: query)
-            
-        } else {
-
-        }
         
         let photo = viewModel.photos[indexPath.item]
         coordinator?.openPhotoDetail(photo: photo)
@@ -114,12 +102,13 @@ extension HomeController: CollectionConfiguration {
 extension HomeController: UITableViewDataSource, UITableViewDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchText.isEmpty {
-//            historyTable.isHidden = true
-//            collection.isHidden = false
-//        }
-        historyTable.isHidden = searchText.isEmpty
-        collection.isHidden = !searchText.isEmpty
+        if searchText.isEmpty {
+            isShowingHistory = false
+            historyTable.isHidden = true
+            collection.isHidden = false
+        }
+//        historyTable.isHidden = searchText.isEmpty
+//        collection.isHidden = !searchText.isEmpty
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -149,25 +138,51 @@ extension HomeController: UITableViewDataSource, UITableViewDelegate {
         
         let query = viewModel.searchHistory[indexPath.row]
         
-        searchBar.text = query
+        searchController.searchBar.text = query
         
         isShowingHistory = false
+        
         historyTable.isHidden = true
         collection.isHidden = false
         
+        viewModel.photos.removeAll()
+        collection.reloadData()
+        
         viewModel.searchPhotos(query: query)
+    }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        guard !isShowingHistory else { return }
+        
+        let position = scrollView.contentOffset.y
+        
+        if position > (collection.contentSize.height - scrollView.frame.size.height - 100) {
+            guard !isShowingHistory,
+                  searchController.searchBar.text?.isEmpty ?? true
+            else { return }
+        }
     }
 }
 extension HomeController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         isShowingHistory = true
-        collection.reloadData()
+        historyTable.isHidden = false
+        collection.isHidden = true
+        historyTable.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         isShowingHistory = false
+        
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        
+        historyTable.isHidden = true
+        collection.isHidden = false
+        viewModel.photos.removeAll()
         collection.reloadData()
+        viewModel.fetchPhotos()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -175,6 +190,9 @@ extension HomeController: UISearchBarDelegate {
         guard let text = searchBar.text, !text.isEmpty else { return }
         
         isShowingHistory = false
+        
+        historyTable.isHidden = true
+        collection.isHidden = false
         
         viewModel.photos.removeAll()
         collection.reloadData()
