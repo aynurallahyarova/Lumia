@@ -11,8 +11,27 @@
 		2C1F76042F549DB600158D3A /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 2C1F76032F549DB600158D3A /* Kingfisher */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2CFBD83F2F7947FE000E4A09 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C1F71F72F4993CF00158D3A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C1F71FE2F4993CF00158D3A;
+			remoteInfo = Lumora;
+		};
+		2CFBD84C2F794C4C000E4A09 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C1F71F72F4993CF00158D3A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C1F71FE2F4993CF00158D3A;
+			remoteInfo = Lumora;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		2C1F71FF2F4993CF00158D3A /* Lumora.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lumora.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CFBD83B2F7947FE000E4A09 /* LumoraUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LumoraUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CFBD8482F794C4C000E4A09 /* LumoraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LumoraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -34,6 +53,11 @@
 			path = Lumora;
 			sourceTree = "<group>";
 		};
+		2CFBD8492F794C4C000E4A09 /* LumoraTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LumoraTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +70,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2CFBD8382F7947FE000E4A09 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CFBD8452F794C4C000E4A09 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -53,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				2C1F72012F4993CF00158D3A /* Lumora */,
+				2CFBD8492F794C4C000E4A09 /* LumoraTests */,
 				2C1F72002F4993CF00158D3A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,6 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				2C1F71FF2F4993CF00158D3A /* Lumora.app */,
+				2CFBD83B2F7947FE000E4A09 /* LumoraUITests.xctest */,
+				2CFBD8482F794C4C000E4A09 /* LumoraTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -92,6 +133,49 @@
 			productReference = 2C1F71FF2F4993CF00158D3A /* Lumora.app */;
 			productType = "com.apple.product-type.application";
 		};
+		2CFBD83A2F7947FE000E4A09 /* LumoraUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2CFBD8432F7947FE000E4A09 /* Build configuration list for PBXNativeTarget "LumoraUITests" */;
+			buildPhases = (
+				2CFBD8372F7947FE000E4A09 /* Sources */,
+				2CFBD8382F7947FE000E4A09 /* Frameworks */,
+				2CFBD8392F7947FE000E4A09 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2CFBD8402F7947FE000E4A09 /* PBXTargetDependency */,
+			);
+			name = LumoraUITests;
+			packageProductDependencies = (
+			);
+			productName = LumoraUITests;
+			productReference = 2CFBD83B2F7947FE000E4A09 /* LumoraUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2CFBD8472F794C4C000E4A09 /* LumoraTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2CFBD84E2F794C4C000E4A09 /* Build configuration list for PBXNativeTarget "LumoraTests" */;
+			buildPhases = (
+				2CFBD8442F794C4C000E4A09 /* Sources */,
+				2CFBD8452F794C4C000E4A09 /* Frameworks */,
+				2CFBD8462F794C4C000E4A09 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2CFBD84D2F794C4C000E4A09 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2CFBD8492F794C4C000E4A09 /* LumoraTests */,
+			);
+			name = LumoraTests;
+			packageProductDependencies = (
+			);
+			productName = LumoraTests;
+			productReference = 2CFBD8482F794C4C000E4A09 /* LumoraTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -99,11 +183,19 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2620;
+				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					2C1F71FE2F4993CF00158D3A = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					2CFBD83A2F7947FE000E4A09 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = 2C1F71FE2F4993CF00158D3A;
+					};
+					2CFBD8472F794C4C000E4A09 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = 2C1F71FE2F4993CF00158D3A;
 					};
 				};
 			};
@@ -126,12 +218,28 @@
 			projectRoot = "";
 			targets = (
 				2C1F71FE2F4993CF00158D3A /* Lumora */,
+				2CFBD83A2F7947FE000E4A09 /* LumoraUITests */,
+				2CFBD8472F794C4C000E4A09 /* LumoraTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2C1F71FD2F4993CF00158D3A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CFBD8392F7947FE000E4A09 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CFBD8462F794C4C000E4A09 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -148,7 +256,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2CFBD8372F7947FE000E4A09 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CFBD8442F794C4C000E4A09 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2CFBD8402F7947FE000E4A09 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C1F71FE2F4993CF00158D3A /* Lumora */;
+			targetProxy = 2CFBD83F2F7947FE000E4A09 /* PBXContainerItemProxy */;
+		};
+		2CFBD84D2F794C4C000E4A09 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C1F71FE2F4993CF00158D3A /* Lumora */;
+			targetProxy = 2CFBD84C2F794C4C000E4A09 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2C1F72132F4993D000158D3A /* Debug */ = {
@@ -332,6 +467,86 @@
 			};
 			name = Release;
 		};
+		2CFBD8412F7947FE000E4A09 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = test.LumoraUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lumora.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lumora";
+			};
+			name = Debug;
+		};
+		2CFBD8422F7947FE000E4A09 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = test.LumoraUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lumora.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lumora";
+			};
+			name = Release;
+		};
+		2CFBD84F2F794C4C000E4A09 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = test.LumoraTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lumora.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lumora";
+			};
+			name = Debug;
+		};
+		2CFBD8502F794C4C000E4A09 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = test.LumoraTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lumora.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lumora";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -349,6 +564,24 @@
 			buildConfigurations = (
 				2C1F72132F4993D000158D3A /* Debug */,
 				2C1F72142F4993D000158D3A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2CFBD8432F7947FE000E4A09 /* Build configuration list for PBXNativeTarget "LumoraUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CFBD8412F7947FE000E4A09 /* Debug */,
+				2CFBD8422F7947FE000E4A09 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2CFBD84E2F794C4C000E4A09 /* Build configuration list for PBXNativeTarget "LumoraTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CFBD84F2F794C4C000E4A09 /* Debug */,
+				2CFBD8502F794C4C000E4A09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

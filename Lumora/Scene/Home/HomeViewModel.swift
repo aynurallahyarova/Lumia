@@ -14,7 +14,7 @@ final class HomeViewModel {
     var success: (() -> Void)?
     var error: ((String) -> Void)?
 
-    private let useCase: HomeUseCase
+    private(set) var useCase: HomeUseCase
     
     // MARK: - History
     private let historyKey = "homeSearchHistory"
