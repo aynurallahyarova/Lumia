@@ -67,7 +67,7 @@ class AppCoordinator: Coordinator {
     }
     
     func openUserDetail(user: User) {
-        let controller = UserDetailController() // bura user = user yazilacaq
+        let controller = UserDetailController(viewModel: UserDetailViewModel) // bura user = user yazilacaq
         if let nav = tabBarController.selectedViewController as? UINavigationController {
             nav.pushViewController(controller, animated: true)
         }

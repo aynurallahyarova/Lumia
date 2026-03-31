@@ -10,6 +10,7 @@ import UIKit
 class TopicsController: BaseController {
     let viewModel = TopicsViewModel()
     var coordinator: AppCoordinator?
+    
     lazy var collectionView: UICollectionView = {
         
         let layout = UICollectionViewFlowLayout()
