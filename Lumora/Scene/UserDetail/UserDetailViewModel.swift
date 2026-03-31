@@ -22,6 +22,7 @@ final class UserDetailViewModel {
         self.user = user
     }
     
+    
     func fetchUserDetail() {
         useCase.fetchUserDetail(userName: user.username ?? "") { data, errorMessage in
             if let errorMessage {
@@ -43,15 +44,20 @@ final class UserDetailViewModel {
             }
         }
     }
+    func fetchAll() {
+        fetchUserDetail()
+        fetchUserPhotos()
+    }
+    
     //MARK: segment controller
     func changeSegment(index: Int) {
         switch index {
         case 0:
             fetchUserPhotos()
-        case 1:
+//        case 1:
             // likes falan
-        case 3:
-            // collections
+//        case 2:
+//            // collections
         default:
             break
         }

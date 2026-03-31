@@ -96,8 +96,6 @@ extension HomeController: CollectionConfiguration {
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        
         let photo = viewModel.photos[indexPath.item]
         coordinator?.openPhotoDetail(photo: photo)
     }

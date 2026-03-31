@@ -94,7 +94,7 @@ class UserDetailController: BaseController {
     
     init(viewModel: UserDetailViewModel) {
         self.viewModel = viewModel
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -158,21 +158,20 @@ class UserDetailController: BaseController {
         ])
     }
     override func configureViewModel() {
-        viewModel.fetchUserDetail()
-        viewModel.fetchUserPhotos()
+        viewModel.fetchAll()
         viewModel.success = { [weak self] in
             guard let self else { return }
             
-            let user = self.viewModel.user
+            let userDetail = self.viewModel.userdetail
 
-            self.backgroundImage.loadURL(data: user?.profileImage?.large ?? "")
-            self.profileImage.loadURL(data: user?.profileImage?.large ?? "")
+            self.backgroundImage.loadURL(data: userDetail?.profileImage?.medium ?? "")
+            self.profileImage.loadURL(data: userDetail?.profileImage?.medium ?? "")
             
-            self.nameLabel.text = user?.name
-            self.bioLabel.text = user?.bio
-            self.locationLabel.text = "📍 \(user?.location ?? "")"
+            self.nameLabel.text = userDetail?.name
+            self.bioLabel.text = userDetail?.bio
+            self.locationLabel.text = "📍 \(userDetail?.location ?? "")"
             
-            self.statsLabel.text = "Photos: \(user?.totalPhotos ?? 0)  Likes: \(user?.totalLikes ?? 0)"
+            self.statsLabel.text = "Photos: \(userDetail?.totalPhotos ?? 0)  Likes: \(userDetail?.totalLikes ?? 0)"
             
             self.collection.reloadData()
         }
@@ -181,9 +180,10 @@ class UserDetailController: BaseController {
         }
     }
     
+    
     @objc private func segmentChanged() {
         //likes photos elave eliyersen
-        print("segment changed")
+        viewModel.changeSegment(index: segment.selectedSegmentIndex)
     }
 
 }
@@ -196,6 +196,11 @@ extension UserDetailController: CollectionConfiguration {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserDetailPhotoCell.identifier, for: indexPath) as! UserDetailPhotoCell
         cell.configure(photo: viewModel.photos[indexPath.item])
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let photo = viewModel.photos[indexPath.item]
+        coordinator?.openPhotoDetail(photo: photo)
     }
     
     

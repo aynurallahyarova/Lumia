@@ -39,6 +39,14 @@ class UsersController: BaseController {
         super.viewDidLoad()
         viewModel.searhUsers(query: currentQuery)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let selectedIndexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedIndexPath, animated: true)
+        }
+    }
+    
     override func configureUI() {
         view.backgroundColor = .white
         title = "Users"
@@ -194,4 +202,10 @@ extension UsersController: UITableViewDelegate {
             viewModel.loadMore(query: currentQuery)
         }
     }
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let user = viewModel.users[indexPath.item]
+        coordinator?.openUserDetail(user: user)
+    }
+
 }
+

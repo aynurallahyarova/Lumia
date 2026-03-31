@@ -36,7 +36,10 @@ class AppCoordinator: Coordinator {
         topicsController.coordinator = self
         let topicsNav = UINavigationController(rootViewController: topicsController)
         
-        let usersNav = UINavigationController(rootViewController: UsersController())
+        let usersController = UsersController()
+        usersController.coordinator = self
+        let usersNav = UINavigationController(rootViewController: usersController)
+        
         let favoriteNav = UINavigationController(rootViewController: FavoritesController())
         let profileNav = UINavigationController(rootViewController: ProfileController())
 
@@ -67,9 +70,11 @@ class AppCoordinator: Coordinator {
     }
     
     func openUserDetail(user: User) {
-        let controller = UserDetailController(viewModel: UserDetailViewModel) // bura user = user yazilacaq
+        let controller = UserDetailController(viewModel: .init(useCase: UserDetailManager(), user: user))
+        controller.coordinator = self
         if let nav = tabBarController.selectedViewController as? UINavigationController {
             nav.pushViewController(controller, animated: true)
         }
     }
 }
+
