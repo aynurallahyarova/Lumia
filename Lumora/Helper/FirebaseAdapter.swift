@@ -36,11 +36,11 @@ final class FirebaseAdapter: FirebaseAdapterUseCase {
         }
     }
     func signIn(email: String, password: String) {
-        <#code#>
+        
     }
     
     func signOut() {
-        <#code#>
+        
     }
     private func saveUserInfoToFirestore(email: String, password: String, completion: @escaping(String?) -> Void) {
         db.collection("users").addDocument(data: ["birthdate": "", "email": email, "password": password]) {

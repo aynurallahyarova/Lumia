@@ -12,6 +12,7 @@ class LoginController: BaseController {
     private lazy var emailTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Email"
+        return textField
     }()
     
     private lazy var passwordTextField: UITextField = {
@@ -21,15 +22,16 @@ class LoginController: BaseController {
         textField.isEnabled = true
         textField.isHighlighted = false
         textField.isSelected = false
+        return textField
     }()
 
     private lazy var infoLabel: UILabel = {
         let label = UILabel()
         label.text = ""
         label.numberOfLines = 0
+        return label
     }()
     
-    var adapter: LoginAdapter?
     let viewModel = LoginViewModel()
     var test: String?
     
@@ -38,48 +40,48 @@ class LoginController: BaseController {
 
     }
     override func configureUI() {
-        <#code#>
+        
     }
     override func configureConstraints() {
-        <#code#>
+        
     }
     override func configureViewModel() {
-        <#code#>
+        
     }
-    private func configureAdapter() {
-        adapter = LoginAdapter(controller: self)
-        adapter?.completion = { state in
-            switch state {
-            case .success(let user):
-                print(user.email)
-                self.infoLabel.text = ""
-            case .failure(let error):
-                self.infoLabel.text = error
-            case .loading:
-                self.infoLabel.text = "Loading..."
-            }
-        }
-    }
+//    private func configureAdapter() {
+//        adapter = LoginAdapter(controller: self)
+//        adapter?.completion = { state in
+//            switch state {
+//            case .success(let user):
+//                print(user.email)
+//                self.infoLabel.text = ""
+//            case .failure(let error):
+//                self.infoLabel.text = error
+//            case .loading:
+//                self.infoLabel.text = "Loading..."
+//            }
+//        }
+//    }
     
-    @IBAction func signupButtonTapped(_ sender: Any) {
-        guard let email = emailTextField.text,
-              let password = passwordTextField.text else { return }
-                
-        adapter?.login(type: .email(email, password), controller: self)
-    }
+//    @IBAction func signupButtonTapped(_ sender: Any) {
+//        guard let email = emailTextField.text,
+//              let password = passwordTextField.text else { return }
+//                
+//        adapter?.login(type: .email(email, password), controller: self)
+//    }
     
-    @IBAction func loginAppleAction(_ sender: Any) {
-        adapter?.login(type: .apple, controller: self)
-    }
-    
-    @IBAction func loginFacebookAction(_ sender: Any) {
-        adapter?.login(type: .facebook, controller: self)
-    }
-    
-    @IBAction func loginGoogleAction(_ sender: Any) {
-        adapter?.login(type: .google, controller: self)
-    }
-    
+//    @IBAction func loginAppleAction(_ sender: Any) {
+//        adapter?.login(type: .apple, controller: self)
+//    }
+//    
+//    @IBAction func loginFacebookAction(_ sender: Any) {
+//        adapter?.login(type: .facebook, controller: self)
+//    }
+//    
+//    @IBAction func loginGoogleAction(_ sender: Any) {
+//        adapter?.login(type: .google, controller: self)
+//    }
+//    
 
 
 }

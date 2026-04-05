@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBt4rOUEjaWpW1Cs0XJEytHdBr4S7gMRdc</string>
+	<string>AIzaSyBc9_UHBhhqzdYLbgA6wLihqGrBWuWC7qU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1030574573649</string>
+	<string>300924088756</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>test.LumoraTests</string>
+	<string>test.Lumora</string>
 	<key>PROJECT_ID</key>
-	<string>lumora-c0444</string>
+	<string>lumoranew-c78ab</string>
 	<key>STORAGE_BUCKET</key>
-	<string>lumora-c0444.firebasestorage.app</string>
+	<string>lumoranew-c78ab.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1030574573649:ios:511563cb7255cb38051070</string>
+	<string>1:300924088756:ios:b601569656b4e0358802e1</string>
 </dict>
 </plist>
