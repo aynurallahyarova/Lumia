@@ -9,6 +9,21 @@ import UIKit
 
 class PhotoDetailController: BaseController {
     
+    private lazy var backgroundImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        return iv
+    }()
+    
+    private lazy var blurView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .light)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
@@ -53,15 +68,27 @@ class PhotoDetailController: BaseController {
     }
     override func configureUI() {
         view.backgroundColor = .white
+        backgroundImageView.loadURL(data: viewModel.imageURL)
         userLabel.text = viewModel.userName
         imageView.loadURL(data: viewModel.imageURL)
     }
     override func configureConstraints() {
+        view.addSubview(backgroundImageView)
+        backgroundImageView.addSubview(blurView)
         view.addSubview(userLabel)
         view.addSubview(imageView)
         view.addSubview(button)
 
         NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            blurView.topAnchor.constraint(equalTo: backgroundImageView.topAnchor),
+            blurView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor),
+            blurView.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor),
+            blurView.bottomAnchor.constraint(equalTo: backgroundImageView.bottomAnchor),
             userLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             userLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 

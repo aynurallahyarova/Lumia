@@ -10,7 +10,7 @@ import UIKit
 class UserDetailController: BaseController {
     private lazy var collection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        let width = (UIScreen.main.bounds.width - 32) / 2
+        let width = (self.view.bounds.width - 32) / 2
         layout.itemSize = CGSize(width: width, height: width)
         layout.minimumLineSpacing = 8
         layout.minimumInteritemSpacing = 8

@@ -37,7 +37,6 @@ class UsersController: BaseController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.searhUsers(query: currentQuery)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,6 +67,7 @@ class UsersController: BaseController {
     }
     
     override func configureViewModel() {
+//        viewModel.searhUsers(query: currentQuery)
         viewModel.success = { [weak self] in
             self?.tableView.reloadData()
         }
@@ -105,7 +105,7 @@ class UsersController: BaseController {
     }
 }
 
-extension UsersController: UITableViewDataSource {
+extension UsersController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         isShowingHistory ? viewModel.searchHistory.count : viewModel.users.count
@@ -143,6 +143,39 @@ extension UsersController: UITableViewDataSource {
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if isShowingHistory {
+            
+            // History-dən seçəndə
+            let query = viewModel.searchHistory[indexPath.row]
+            
+            searchController.searchBar.text = query
+            
+            isShowingHistory = false
+            
+            viewModel.users.removeAll()
+            tableView.reloadData()
+//            viewModel.searhUsers(query: query)
+            viewModel.fetchUsers(query: query, isLoadMore: false)
+            
+        } else {
+            let selectedUser = viewModel.users[indexPath.row]
+            coordinator?.openUserDetail(user: selectedUser)
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard !isShowingHistory else { return }
+        let position = scrollView.contentOffset.y
+        if position > (tableView.contentSize.height - scrollView.frame.size.height - 100) {
+//            viewModel.loadMore(query: currentQuery)
+            viewModel.fetchUsers(query: currentQuery, isLoadMore: true)
+        }
+    }
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let user = viewModel.users[indexPath.item]
+        coordinator?.openUserDetail(user: user)
+    }
 }
 
 extension UsersController: UISearchBarDelegate {
@@ -154,6 +187,7 @@ extension UsersController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         isShowingHistory = false
+        viewModel.users.removeAll()
         tableView.reloadData()
     }
     
@@ -167,45 +201,9 @@ extension UsersController: UISearchBarDelegate {
         tableView.reloadData()
         
         // API + HISTORY SAVE
-        viewModel.searhUsers(query: text)
-        
+//        viewModel.searhUsers(query: text)
+        viewModel.fetchUsers(query: text, isLoadMore: false)
         searchBar.resignFirstResponder()
     }
-}
-extension UsersController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if isShowingHistory {
-            
-            // History-dən seçəndə
-            let query = viewModel.searchHistory[indexPath.row]
-            
-            searchController.searchBar.text = query
-            
-            isShowingHistory = false
-            
-            viewModel.users.removeAll()
-            tableView.reloadData()
-            
-            viewModel.searhUsers(query: query)
-            
-        } else {
-            let selectedUser = viewModel.users[indexPath.row]
-            coordinator?.openUserDetail(user: selectedUser)
-        }
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard !isShowingHistory else { return }
-        let position = scrollView.contentOffset.y
-        if position > (tableView.contentSize.height - scrollView.frame.size.height - 100) {
-            viewModel.loadMore(query: currentQuery)
-        }
-    }
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let user = viewModel.users[indexPath.item]
-        coordinator?.openUserDetail(user: user)
-    }
-
 }
 

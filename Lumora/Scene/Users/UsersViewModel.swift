@@ -22,39 +22,56 @@ final class UsersViewModel {
         return UserDefaults.standard.stringArray(forKey: historyKey) ?? []
     }
     
-    
     init(useCase: UsersUseCase) {
         self.useCase = useCase
     }
     
     //MARK: Search Users
-    func searhUsers(query: String) {
-        currentPage = 1
-        
-        addToHistory(query)
-        
+    func fetchUsers(query: String, isLoadMore: Bool) {
+        if !isLoadMore {
+            currentPage = 1
+            addToHistory(query)
+        }
         useCase.searchUsers(query: query, page: currentPage) { data, errorMessage in
             if let errorMessage{
                 self.error?(errorMessage)
             } else if let data {
-                self.users = data
+                if isLoadMore {
+                    self.users.append(contentsOf: data)
+                } else {
+                    self.users = data
+                }
                 self.currentPage += 1
                 self.success?()
             }
         }
     }
-    func loadMore(query: String) {
-        useCase.searchUsers(query: query, page: currentPage) { data, errorMessage in
-            
-            if let errorMessage {
-                self.error?(errorMessage)
-            } else if let data {
-                self.users.append(contentsOf: data)
-                self.currentPage += 1
-                self.success?()
-            }
-        }
-    }
+//    func searhUsers(query: String) {
+//        currentPage = 1
+//        
+//        addToHistory(query)
+//        
+//        useCase.searchUsers(query: query, page: currentPage) { data, errorMessage in
+//            if let errorMessage{
+//                self.error?(errorMessage)
+//            } else if let data {
+//                self.users = data
+//                self.currentPage += 1
+//                self.success?()
+//            }
+//        }
+//    }
+//    func loadMore(query: String) {
+//        useCase.searchUsers(query: query, page: currentPage) { data, errorMessage in
+//            if let errorMessage {
+//                self.error?(errorMessage)
+//            } else if let data {
+//                self.users.append(contentsOf: data)
+//                self.currentPage += 1
+//                self.success?()
+//            }
+//        }
+//    }
     
     // MARK: - History Management
     private func addToHistory(_ query: String) {
