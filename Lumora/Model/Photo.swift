@@ -36,6 +36,7 @@ struct Photo: Codable, TopImageBottomLabelProtocol {
 struct PhotoUrls: Codable {
     let small: String?
     let regular: String?
+    let full: String?
     let width: Int?
     let height: Int?
 }

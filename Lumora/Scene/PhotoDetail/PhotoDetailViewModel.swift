@@ -20,4 +20,12 @@ class PhotoDetailViewModel {
     var imageURL: String {
         photo.urls?.regular ?? ""
     }
+    
+    var smallImageURL: String {
+        photo.urls?.small ?? ""
+    }
+    
+    var fullImageURL: String {
+        photo.urls?.full ?? ""
+    }
 }

@@ -47,11 +47,13 @@ class PhotoDetailController: BaseController {
         b.setTitleColor(.white, for: .normal)
         b.backgroundColor = .black
         b.layer.cornerRadius = 18
+        b.addTarget(self, action: #selector(downloadTapped), for: .touchUpInside)
         b.translatesAutoresizingMaskIntoConstraints = false
         return b
     }()
     
     var viewModel: PhotoDetailViewModel
+    private var isFavorite = false
     
     init(viewModel: PhotoDetailViewModel) {
         self.viewModel = viewModel
@@ -72,6 +74,17 @@ class PhotoDetailController: BaseController {
         userLabel.text = viewModel.userName
         imageView.loadURL(data: viewModel.imageURL)
     }
+    
+    override func configureViewModel() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "heart"),
+            style: .plain,
+            target: self,
+            action: #selector(favoriteTapped)
+        )
+    }
+
+    
     override func configureConstraints() {
         view.addSubview(backgroundImageView)
         backgroundImageView.addSubview(blurView)
@@ -102,5 +115,51 @@ class PhotoDetailController: BaseController {
             button.widthAnchor.constraint(equalToConstant: 200),
             button.heightAnchor.constraint(equalToConstant: 50)
         ])
+    }
+    
+    @objc private func favoriteTapped() {
+        isFavorite.toggle()
+        
+        let imageName = isFavorite ? "heart.fill" : "heart"
+        navigationItem.rightBarButtonItem?.image = UIImage(systemName: imageName)
+        navigationItem.rightBarButtonItem?.tintColor = isFavorite ? .red: .black
+    }
+    
+    @objc private func downloadTapped() {
+        let alert = UIAlertController(title: "Download Image", message: "Choose size", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "Small", style: .default, handler: { _ in
+            self.downloadAndShowAlert(url: self.viewModel.smallImageURL)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Regular", style: .default, handler: { _ in
+            self.downloadAndShowAlert(url: self.viewModel.imageURL)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Full", style: .default, handler: { _ in
+            self.downloadAndShowAlert(url: self.viewModel.fullImageURL)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        present(alert, animated: true)
+    }
+    
+    private func downloadAndShowAlert(url: String) {
+        imageView.downloadImage(from: url) {
+            DispatchQueue.main.async {
+                self.showSuccessAlert()
+            }
+        }
+    }
+    
+    private func showSuccessAlert() {
+        let alert = UIAlertController(
+            title: "Saved",
+            message: "Image saved to gallery",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
