@@ -9,20 +9,43 @@ import UIKit
 
 class LoginController: BaseController {
     
-    private lazy var titleLabel: UILabel = {
+    private lazy var mainStackView: UIStackView = {
+       let stack = UIStackView()
+        stack.axis = .vertical
+        stack.distribution = .fill
+        stack.spacing = 16
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        
+        stack.addArrangedSubview(appLogoLabel)
+        stack.addArrangedSubview(titleLabel)
+        stack.addArrangedSubview(emailTextField)
+        stack.addArrangedSubview(passwordTextField)
+        stack.addArrangedSubview(continueButton)
+        stack.addArrangedSubview(orSeperatorStack)
+        stack.addArrangedSubview(googleButton)
+        stack.addArrangedSubview(iosButton)
+        stack.addArrangedSubview(facebookButton)
+        stack.addArrangedSubview(signUpButton)
+        
+        stack.setCustomSpacing(32, after: appLogoLabel)
+        stack.setCustomSpacing(24, after: orSeperatorStack)
+        return stack
+    }()
+    
+    private lazy var appLogoLabel: UILabel = {
         let label = UILabel()
         label.text = "Lumora"
         label.textAlignment = .center
-        label.font = UIFont(name: "Noteworthy-Bold", size: 28)
+        label.font = UIFont(name: "Bradley Hand", size: 32)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var subtitleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Log in or create an account"
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 18)
+        label.font = UIFont.systemFont(ofSize: 24, weight: .medium)
+        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -30,17 +53,38 @@ class LoginController: BaseController {
     private lazy var orlabel: UILabel = {
         let label = UILabel()
         label.text = "OR"
-        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private lazy var orSeperatorStack: UIStackView = {
+        let right = UIView()
+        let left = UIView()
+        
+        [left, right].forEach {
+            $0.backgroundColor = .systemGray4
+            $0.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        }
+        
+        let stack = UIStackView(arrangedSubviews: [left, orlabel, right])
+        stack.axis = .horizontal
+        stack.spacing = 8
+        stack.alignment = .center
+        
+        left.widthAnchor.constraint(equalTo: right.widthAnchor).isActive = true
+        
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
     }()
     
     private lazy var emailTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Email Address"
-        textField.layer.cornerRadius = 10
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.borderStyle = .roundedRect
+        textField.keyboardType = .emailAddress
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -49,174 +93,122 @@ class LoginController: BaseController {
         let textField = UITextField()
         textField.placeholder = "Password"
         textField.isSecureTextEntry = true
-        textField.layer.cornerRadius = 10
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.lightGray.cgColor
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
-    }()
-
-//    private lazy var infoLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = ""
-//        label.numberOfLines = 0
-//        infoLabel.translatesAutoresizingMaskIntoConstraints = false
-//        return label
-//    }()
-    
-    private lazy var eyeButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("👁", for: .normal)
-        button.addTarget(self, action: #selector(togglePassword), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var Continue: UIButton = {
-        let button = UIButton()
-        button.setTitle("Continue", for: .normal)
-        button.backgroundColor = .black
-        button.addTarget(self, action: #selector(actionTapped), for: .touchUpInside)
-        button.layer.cornerRadius = 10
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private lazy var switchButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Sign Up", for: .normal)
-        button.backgroundColor = .black
-        button.addTarget(self, action: #selector(toggleMode), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private lazy var switchLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Don't have an account?"
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    
-    private lazy var nameField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Full Name"
-        textField.layer.cornerRadius = 10
-        textField.layer.borderWidth = 1
+        textField.borderStyle = .roundedRect
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
+        
+        let btn = UIButton(type: .system)
+        btn.setImage(UIImage(systemName: "eye"), for: .normal)
+        btn.tintColor = .label
+        btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        btn.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
+        textField.rightView = btn
+        textField.rightViewMode = .always
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
-    private lazy var googleButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Continue with Google", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = 10
+    @objc private func togglePasswordVisibility(_ sender: UIButton) {
+        passwordTextField.isSecureTextEntry.toggle()
+        let imageName = passwordTextField.isSecureTextEntry ? "eye.slash" : "eye"
+        sender.setImage(UIImage(systemName: imageName), for: .normal)
+    }
+    
+    //    private lazy var infoLabel: UILabel = {
+    //        let label = UILabel()
+    //        label.text = ""
+    //        label.numberOfLines = 0
+    //        infoLabel.translatesAutoresizingMaskIntoConstraints = false
+    //        return label
+    //    }()
+    
+    
+    private let continueButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.setTitle("Continue", for: .normal)
+        b.layer.cornerRadius = 4
+        b.setTitleColor(.white, for: .normal)
+        b.backgroundColor = .black
+        b.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        b.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.addTarget(self, action: #selector(handleLoginRequest), for: .touchUpInside)
+        return b
+    }()
+    
+    private func createSocialButton(title: String, image: UIImage?) -> UIButton {
+        var config = UIButton.Configuration.plain()
+        
+        if let originalImage = image {
+            let size = CGSize(width: 24, height: 24)
+            let renderer = UIGraphicsImageRenderer(size: size)
+            let scaledImage = renderer.image { _ in
+                originalImage.draw(in: CGRect(origin: .zero, size: size))
+            }
+            config.image = scaledImage.withRenderingMode(.alwaysOriginal)
+        }
+        
+        config.title = title
+        config.imagePadding = 12
+        config.imagePlacement = .leading
+        config.baseForegroundColor = .label
+        config.background.strokeWidth = 1
+        config.background.strokeColor = .systemGray4
+        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+        
+        let button = UIButton(configuration: config)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        button.contentHorizontalAlignment = .center
+        
+        return button
+    }
+    
+    private lazy var googleButton = createSocialButton(title: "Continue with Google", image: UIImage(named: "google_logo"))
+    private lazy var iosButton = createSocialButton(title: "Continue with IOS", image: UIImage(systemName: "apple.logo"))
+    private lazy var facebookButton = createSocialButton(title: "Continue with Facebook", image: UIImage(named: "facebook_logo"))
+    
+    private lazy var signUpButton: UIButton = {
+        let button = UIButton(type: .system)
+        let title = NSMutableAttributedString(
+            string: "Don't have an account?",
+            attributes: [.foregroundColor: UIColor.gray, .font: UIFont.systemFont(ofSize: 14)]
+        )
+        
+        let signUpPart = NSAttributedString(
+            string: " Sign Up",
+            attributes: [.foregroundColor: UIColor.black,
+                         .font: UIFont.boldSystemFont(ofSize: 14)]
+        )
+        title.append(signUpPart)
+        button.setAttributedTitle(title, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
         return button
     }()
     
-    private lazy var facebookButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Continue with Facebook", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = 10
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    
+    private let viewModel: LoginViewModel = {
+        let vm = LoginViewModel()
+        return vm
     }()
     
-    private lazy var appleButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Continue with IOS", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = 10
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    let viewModel = LoginViewModel()
     var test: String?
     var isLogin = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
     }
     override func configureUI() {
-        view.backgroundColor = .white
-        view.addSubview(titleLabel)
-        view.addSubview(subtitleLabel)
-        view.addSubview(nameField)
-        view.addSubview(emailTextField)
-        view.addSubview(passwordTextField)
-//        view.addSubview(infoLabel)
-        view.addSubview(eyeButton)
-        view.addSubview(Continue)
-        view.addSubview(orlabel)
-        view.addSubview(googleButton)
-        view.addSubview(appleButton)
-        view.addSubview(facebookButton)
-        view.addSubview(switchLabel)
-        view.addSubview(switchButton)
+        view.addSubview(mainStackView)
+        view.backgroundColor = .systemBackground
     }
     override func configureConstraints() {
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            subtitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            
-            nameField.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 20),
-            nameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            nameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            nameField.heightAnchor.constraint(equalToConstant: 50),
-            
-            emailTextField.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 10),
-            emailTextField.leadingAnchor.constraint(equalTo: nameField.leadingAnchor),
-            emailTextField.trailingAnchor.constraint(equalTo: nameField.trailingAnchor),
-            emailTextField.heightAnchor.constraint(equalToConstant: 50),
-            
-            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 10),
-            passwordTextField.leadingAnchor.constraint(equalTo: nameField.leadingAnchor),
-            passwordTextField.trailingAnchor.constraint(equalTo: nameField.trailingAnchor),
-            passwordTextField.heightAnchor.constraint(equalToConstant: 50),
-            
-            eyeButton.centerYAnchor.constraint(equalTo: passwordTextField.centerYAnchor),
-            eyeButton.trailingAnchor.constraint(equalTo: passwordTextField.trailingAnchor, constant: -10),
-            
-            Continue.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 20),
-            Continue.leadingAnchor.constraint(equalTo: nameField.leadingAnchor),
-            Continue.trailingAnchor.constraint(equalTo: nameField.trailingAnchor),
-            Continue.heightAnchor.constraint(equalToConstant: 50),
-            
-            orlabel.topAnchor.constraint(equalTo: Continue.bottomAnchor, constant: 20),
-            orlabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            googleButton.topAnchor.constraint(equalTo: orlabel.bottomAnchor, constant: 20),
-            googleButton.leadingAnchor.constraint(equalTo: nameField.leadingAnchor),
-            googleButton.trailingAnchor.constraint(equalTo: nameField.trailingAnchor),
-            googleButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            appleButton.topAnchor.constraint(equalTo: googleButton.bottomAnchor, constant: 10),
-            appleButton.leadingAnchor.constraint(equalTo: nameField.leadingAnchor),
-            appleButton.trailingAnchor.constraint(equalTo: nameField.trailingAnchor),
-            appleButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            facebookButton.topAnchor.constraint(equalTo: appleButton.bottomAnchor, constant: 10),
-            facebookButton.leadingAnchor.constraint(equalTo: nameField.leadingAnchor),
-            facebookButton.trailingAnchor.constraint(equalTo: nameField.trailingAnchor),
-            facebookButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            switchLabel.topAnchor.constraint(equalTo: facebookButton.bottomAnchor, constant: 20),
-            switchLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -40),
-            
-            switchButton.centerYAnchor.constraint(equalTo: switchLabel.centerYAnchor),
-            switchButton.leadingAnchor.constraint(equalTo: switchLabel.trailingAnchor, constant: 5)
+            mainStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
         
     }
@@ -235,72 +227,15 @@ class LoginController: BaseController {
         
     }
     
-    @objc private func togglePassword() {
-        passwordTextField.isSecureTextEntry.toggle()
-    }
     
-    @objc private func toggleMode() {
-        isLogin.toggle()
-        if isLogin {
-            subtitleLabel.text = "Log in or Create an account"
-            Continue.setTitle("Continue", for: .normal)
-            switchLabel.text = "Don't have an account?"
-            switchButton.setTitle("Sign Up", for: .normal)
-            nameField.isHidden = true
-        } else {
-            subtitleLabel.text = "Create an account"
-            Continue.setTitle("Sign Up", for: .normal)
-            switchLabel.text = "Already have an account?"
-            switchButton.setTitle("Sign In", for: .normal)
-            nameField.isHidden = false
-        }
-    }
-    
-    @objc private func actionTapped() {
-        let email = emailTextField.text ?? ""
-        let password = passwordTextField.text ?? ""
+    @objc private func handleLoginRequest() {
+        viewModel.login(email: emailTextField.text ?? "", password: passwordTextField.text ?? "")
         
-        if isLogin {
-            viewModel.login(email: email, password: password)
-        } else {
-            let name = nameField.text ?? ""
-            viewModel.register(email: email, password: password, fullName: name)
-        }
     }
-//    private func configureAdapter() {
-//        adapter = LoginAdapter(controller: self)
-//        adapter?.completion = { state in
-//            switch state {
-//            case .success(let user):
-//                print(user.email)
-//                self.infoLabel.text = ""
-//            case .failure(let error):
-//                self.infoLabel.text = error
-//            case .loading:
-//                self.infoLabel.text = "Loading..."
-//            }
-//        }
-//    }
     
-//    @IBAction func signupButtonTapped(_ sender: Any) {
-//        guard let email = emailTextField.text,
-//              let password = passwordTextField.text else { return }
-//                
-//        adapter?.login(type: .email(email, password), controller: self)
-//    }
+    @objc func handleSignUp() {
+        let vc = RegisterController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
     
-//    @IBAction func loginAppleAction(_ sender: Any) {
-//        adapter?.login(type: .apple, controller: self)
-//    }
-//    
-//    @IBAction func loginFacebookAction(_ sender: Any) {
-//        adapter?.login(type: .facebook, controller: self)
-//    }
-//    
-//    @IBAction func loginGoogleAction(_ sender: Any) {
-//        adapter?.login(type: .google, controller: self)
-//    }
-//    
-
-
 }
