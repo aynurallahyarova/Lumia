@@ -55,7 +55,7 @@ class AppCoordinator: Coordinator {
     
     func openPhotoDetail(photo: Photo) {
         let controller = PhotoDetailController(viewModel: .init(photo: photo))
-        
+        controller.hidesBottomBarWhenPushed = true
         if let nav = tabBarController.selectedViewController as? UINavigationController {
             nav.pushViewController(controller, animated: true)
         }

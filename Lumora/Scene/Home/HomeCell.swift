@@ -26,16 +26,19 @@ class HomeCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     private lazy var favoriteButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "heart"), for: .normal)
         button.tintColor = .white
         button.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         button.layer.cornerRadius = 14
+        button.addTarget(self, action: #selector(favoriteTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    private var isFavorite = false
+    private var photo: Photo?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,11 +46,18 @@ class HomeCell: UICollectionViewCell {
         configureUI()
     }
     
+    override var isHighlighted: Bool {
+        didSet {
+            self.alpha = 1.0
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     private func configureUI() {
         contentView.clipsToBounds = true
+        imageView.isUserInteractionEnabled = true
     }
     
     func configureConstraints() {
@@ -72,9 +82,31 @@ class HomeCell: UICollectionViewCell {
             favoriteButton.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -8)
         ])
     }
-
+    
     func configure(with photo: Photo) {
         imageView.loadURL(data: photo.urls?.small ?? "")
         nameLabel.text = photo.user?.name
+        self.photo = photo
+    }
+    
+    @objc private func favoriteTapped() {
+        guard let photo = photo else { return }
+        isFavorite.toggle()
+        
+        let imageName = isFavorite ? "heart.fill" : "heart"
+        favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
+        favoriteButton.tintColor = isFavorite ? .red : .white
+        
+        // For FireStore
+        if isFavorite {
+            FavoriteManager.shared.addFavorite(photo: photo) { error in
+                print(error ?? "Added")
+            }
+        } else {
+            FavoriteManager.shared.removeFavorite(photoId: photo.id ?? "") { error in
+                print(error ?? "Removed")
+            }
+        }
     }
 }
+

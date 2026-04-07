@@ -54,6 +54,7 @@ class PhotoDetailController: BaseController {
     
     var viewModel: PhotoDetailViewModel
     private var isFavorite = false
+    private var photo: Photo?
     
     init(viewModel: PhotoDetailViewModel) {
         self.viewModel = viewModel
@@ -73,6 +74,7 @@ class PhotoDetailController: BaseController {
         backgroundImageView.loadURL(data: viewModel.imageURL)
         userLabel.text = viewModel.userName
         imageView.loadURL(data: viewModel.imageURL)
+        if self.photo == nil { self.photo = viewModel.photo }
     }
     
     override func configureViewModel() {
@@ -123,6 +125,24 @@ class PhotoDetailController: BaseController {
         let imageName = isFavorite ? "heart.fill" : "heart"
         navigationItem.rightBarButtonItem?.image = UIImage(systemName: imageName)
         navigationItem.rightBarButtonItem?.tintColor = isFavorite ? .red: .black
+        
+        if isFavorite {
+            guard let photo else {
+                print("No photo to favorite")
+                return
+            }
+            FavoriteManager.shared.addFavorite(photo: photo) { error in
+                print(error ?? "Added")
+            }
+        } else {
+            guard let id = photo?.id, !id.isEmpty else {
+                print("No photo id to remove from favorites")
+                return
+            }
+            FavoriteManager.shared.removeFavorite(photoId: id) { error in
+                print(error ?? "Removed")
+            }
+        }
     }
     
     @objc private func downloadTapped() {
@@ -163,3 +183,4 @@ class PhotoDetailController: BaseController {
         present(alert, animated: true)
     }
 }
+
