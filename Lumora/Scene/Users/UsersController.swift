@@ -67,7 +67,8 @@ class UsersController: BaseController {
     }
     
     override func configureViewModel() {
-//        viewModel.searhUsers(query: currentQuery)
+        viewModel.fetchRandomUsers()
+        
         viewModel.success = { [weak self] in
             self?.tableView.reloadData()
         }
@@ -103,6 +104,7 @@ class UsersController: BaseController {
     @objc private func profileTapped() {
 //        coordinator?.openProfile()
     }
+    
 }
 
 extension UsersController: UITableViewDataSource, UITableViewDelegate {
@@ -131,7 +133,7 @@ extension UsersController: UITableViewDataSource, UITableViewDelegate {
             return cell
         }
     }
-    // Swipe ilə silmək
+    // swipe ile silmek
     func tableView(_ tableView: UITableView,
                    commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {
@@ -146,7 +148,7 @@ extension UsersController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isShowingHistory {
             
-            // History-dən seçəndə
+            // historyden secende
             let query = viewModel.searchHistory[indexPath.row]
             
             searchController.searchBar.text = query
@@ -189,6 +191,7 @@ extension UsersController: UISearchBarDelegate {
         isShowingHistory = false
         viewModel.users.removeAll()
         tableView.reloadData()
+        viewModel.fetchRandomUsers()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

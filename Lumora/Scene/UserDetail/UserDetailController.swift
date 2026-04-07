@@ -29,6 +29,7 @@ class UserDetailController: BaseController {
         iv.contentMode = .scaleAspectFill
         iv.layer.cornerRadius = 40
         iv.clipsToBounds = true
+        iv.layer.borderColor = UIColor.white.cgColor
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
@@ -36,6 +37,7 @@ class UserDetailController: BaseController {
     private lazy var backgroundImage: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
@@ -118,24 +120,23 @@ class UserDetailController: BaseController {
     }
     override func configureConstraints() {
         NSLayoutConstraint.activate([
-            // background
             backgroundImage.topAnchor.constraint(equalTo: view.topAnchor),
             backgroundImage.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             backgroundImage.heightAnchor.constraint(equalToConstant: 250),
-            
+   
             blurView.topAnchor.constraint(equalTo: backgroundImage.topAnchor),
             blurView.leadingAnchor.constraint(equalTo: backgroundImage.leadingAnchor),
             blurView.trailingAnchor.constraint(equalTo: backgroundImage.trailingAnchor),
-            blurView.bottomAnchor.constraint(equalTo: backgroundImage.bottomAnchor),
+
+            blurView.bottomAnchor.constraint(equalTo: segment.topAnchor, constant: -12),
             
-            // profile
             profileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             profileImage.centerYAnchor.constraint(equalTo: backgroundImage.bottomAnchor),
             profileImage.widthAnchor.constraint(equalToConstant: 80),
             profileImage.heightAnchor.constraint(equalToConstant: 80),
             
-            nameLabel.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 8),
+            nameLabel.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 10),
             nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             bioLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
@@ -157,6 +158,7 @@ class UserDetailController: BaseController {
             collection.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
+    
     override func configureViewModel() {
         viewModel.fetchAll()
         viewModel.success = { [weak self] in
@@ -180,12 +182,10 @@ class UserDetailController: BaseController {
         }
     }
     
-    
     @objc private func segmentChanged() {
         //likes photos elave eliyersen
         viewModel.changeSegment(index: segment.selectedSegmentIndex)
     }
-
 }
 extension UserDetailController: CollectionConfiguration {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -202,6 +202,4 @@ extension UserDetailController: CollectionConfiguration {
         let photo = viewModel.photos[indexPath.item]
         coordinator?.openPhotoDetail(photo: photo)
     }
-    
-    
 }

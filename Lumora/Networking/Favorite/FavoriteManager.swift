@@ -89,10 +89,8 @@ final class FavoriteManager {
                         imageUrl: data["imageUrl"] as? String ?? "",
                         username: data["username"] as? String ?? ""
                     )
-                    
                     items.append(item)
                 }
-                
                 completion(items)
             }
     }

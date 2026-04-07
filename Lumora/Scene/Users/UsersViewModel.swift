@@ -46,33 +46,6 @@ final class UsersViewModel {
             }
         }
     }
-//    func searhUsers(query: String) {
-//        currentPage = 1
-//        
-//        addToHistory(query)
-//        
-//        useCase.searchUsers(query: query, page: currentPage) { data, errorMessage in
-//            if let errorMessage{
-//                self.error?(errorMessage)
-//            } else if let data {
-//                self.users = data
-//                self.currentPage += 1
-//                self.success?()
-//            }
-//        }
-//    }
-//    func loadMore(query: String) {
-//        useCase.searchUsers(query: query, page: currentPage) { data, errorMessage in
-//            if let errorMessage {
-//                self.error?(errorMessage)
-//            } else if let data {
-//                self.users.append(contentsOf: data)
-//                self.currentPage += 1
-//                self.success?()
-//            }
-//        }
-//    }
-    
     // MARK: - History Management
     private func addToHistory(_ query: String) {
         var history = searchHistory
@@ -101,5 +74,17 @@ final class UsersViewModel {
     
     func clearHistory() {
         UserDefaults.standard.removeObject(forKey: historyKey)
+    }
+    
+    func fetchRandomUsers() {
+        currentPage = 1
+        useCase.searchUsers(query: "a", page: currentPage) { [weak self] data, errorMessage in
+            if let errorMessage = errorMessage {
+                self?.error?(errorMessage)
+            } else if let data = data {
+                self?.users = data.shuffled()
+                self?.success?()
+            }
+        }
     }
 }
