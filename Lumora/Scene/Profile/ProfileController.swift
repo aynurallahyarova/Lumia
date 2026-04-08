@@ -117,9 +117,17 @@ class ProfileController: BaseController {
     override func configureViewModel() {
         viewModel.onUser = { [weak self] user in
             guard let self = self else { return }
-            self.nameLabel.text = user.fullname
-            self.emailLabel.text = user.email
-            self.profileImageView.loadURL(data: user.profileImage?.medium ?? "")
+            
+            self.nameLabel.text = user.fullname ?? "Guest User"
+            self.emailLabel.text = user.email ?? "noemail@example.com"
+            
+            // sekil yoxlanmasi
+            if let imageUrl = user.profileImage?.medium, !imageUrl.isEmpty {
+                self.profileImageView.loadURL(data: imageUrl)
+            } else {
+                self.profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+                self.profileImageView.tintColor = .systemGray4
+            }
         }
     }
     

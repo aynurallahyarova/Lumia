@@ -94,4 +94,18 @@ final class FavoriteManager {
                 completion(items)
             }
     }
+    
+    func isFavorite(photoId: String, completion: @escaping (Bool) -> Void) {
+        // Firestore da olub olmadigini yoxlayiriq
+        let db = Firestore.firestore()
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        db.collection("users").document(userId).collection("favorites").document(photoId).getDocument { document, error in
+            if let document = document, document.exists {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+    }
 }

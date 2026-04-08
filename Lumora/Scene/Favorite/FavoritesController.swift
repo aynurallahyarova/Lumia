@@ -72,6 +72,25 @@ extension FavoritesController: CollectionConfiguration {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavoriteCell", for: indexPath) as! FavoriteCell
         cell.configure(with: viewModel.items[indexPath.item])
+        cell.onDelete = { [weak self] in
+            guard let self = self else { return }
+            let index = indexPath.item
+            let photoId = self.viewModel.items[index].id
+            
+            FavoriteManager.shared.removeFavorite(photoId: photoId) { error in
+                if let error = error {
+                    print(error)
+                } else {
+                    self.viewModel.items.remove(at: index)
+                    
+                    DispatchQueue.main.async {
+                        self.collectionView.deleteItems(at: [indexPath])
+                        
+                        NotificationCenter.default.post(name: NSNotification.Name("FavoriteUpdated"), object: nil)
+                    }
+                }
+            }
+        }
         return cell
     }
     

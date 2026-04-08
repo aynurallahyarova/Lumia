@@ -44,6 +44,7 @@ class HomeCell: UICollectionViewCell {
         super.init(frame: frame)
         configureConstraints()
         configureUI()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleFavoriteUpdate), name: NSNotification.Name("FavoriteUpdated"), object: nil)
     }
     
     override var isHighlighted: Bool {
@@ -89,22 +90,42 @@ class HomeCell: UICollectionViewCell {
         self.photo = photo
     }
     
+    @objc private func handleFavoriteUpdate() {
+        guard let photoId = photo?.id else { return }
+        FavoriteManager.shared.isFavorite(photoId: photoId) { [weak self] favorite in
+            DispatchQueue.main.async {
+                self?.isFavorite = favorite
+                let imageName = favorite ? "heart.fill" : "heart"
+                self?.favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
+                self?.favoriteButton.tintColor = favorite ? .red : .white
+            }
+        }
+    }
+    
     @objc private func favoriteTapped() {
         guard let photo = photo else { return }
+        
         isFavorite.toggle()
         
         let imageName = isFavorite ? "heart.fill" : "heart"
         favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
         favoriteButton.tintColor = isFavorite ? .red : .white
-        
-        // For FireStore
+
         if isFavorite {
             FavoriteManager.shared.addFavorite(photo: photo) { error in
-                print(error ?? "Added")
+                if let error = error {
+                    print(error)
+                } else {
+                    print("Added")
+                }
             }
         } else {
             FavoriteManager.shared.removeFavorite(photoId: photo.id ?? "") { error in
-                print(error ?? "Removed")
+                if let error = error {
+                    print(error)
+                } else {
+                    print("Removed")
+                }
             }
         }
     }
